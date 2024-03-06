@@ -35,6 +35,11 @@ select distinct concat(c.last_name, ' ', c.first_name), sum(p.amount) over (part
 from payment p, rental r, customer c, inventory i, film f
 where date(p.payment_date) = '2005-07-30' and p.payment_date = r.rental_date and r.customer_id = c.customer_id and i.inventory_id = r.inventory_id
 ```
+
+перечислите узкие места;
+оптимизируйте запрос: внесите корректировки по использованию операторов, при необходимости добавьте индексы.
+
+
 Дополнительные задания (со звёздочкой*)
 Эти задания дополнительные, то есть не обязательные к выполнению, и никак не повлияют на получение вами зачёта по этому домашнему заданию. Вы можете их выполнить, если хотите глубже шире разобраться в материале.
 
