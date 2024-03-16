@@ -44,7 +44,21 @@ where date(p.payment_date) = '2005-07-30' and p.payment_date = r.rental_date and
 **Доработанная оптимизаци:**
 
 ```
-![image](https://github.com/duha2060/index/assets/80347708/64cc4589-41a3-4034-bdfb-6afd8a121e36)
+explain analyze
+SELECT CONCAT(c.last_name, ' ', c.first_name) AS full_name, 
+       SUM(p.amount) AS total_amount
+FROM payment p
+CROSS JOIN customer c
+WHERE payment_date >= '2005-07-30' and payment_date < DATE_ADD('2005-07-30', INTERVAL 1 DAY)
+      AND p.customer_id = c.customer_id
+GROUP BY CONCAT(c.last_name, ' ', c.first_name);
+
+-> Table scan on <temporary>  (actual time=3.07..3.12 rows=391 loops=1)
+    -> Aggregate using temporary table  (actual time=3.06..3.06 rows=391 loops=1)
+        -> Nested loop inner join  (cost=507 rows=634) (actual time=0.0453..2.33 rows=634 loops=1)
+            -> Index range scan on p using idx_payment_date over ('2005-07-30 00:00:00' <= payment_date < '2005-07-31 00:00:00'), with index condition: ((p.payment_date >= TIMESTAMP'2005-07-30 00:00:00') and (p.payment_date < <cache>(('2005-07-30' + interval 1 day))))  (cost=286 rows=634) (actual time=0.0353..1.23 rows=634 loops=1)
+            -> Single-row index lookup on c using PRIMARY (customer_id=p.customer_id)  (cost=0.25 rows=1) (actual time=0.00153..0.00156 rows=1 loops=634)
+
 
 ```
 
