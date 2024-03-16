@@ -41,11 +41,11 @@ where date(p.payment_date) = '2005-07-30' and p.payment_date = r.rental_date and
 
 После анализа исходного запроса было выявляено, что наиболее узким местом в предлагаемом запросе является то, что оконная функция обрабатывает излишние таблицы а именно inventory, rental и film. Т.к. нужно посчитать сумму платежей покупателей за конкретную дату, обработка и присоединение этих таблиц не имеет смысла т.к. дальше данные не используются. Все необходимые данные есть в таблицах payment и customer, соответственно, остальные таблицы можно исключить. 
 
-оптимизация:
+**Доработанная оптимизаци:**
+
 ```
-select distinct concat(c.last_name, ' ', c.first_name), sum(p.amount) over (partition by c.customer_id)
-from payment p, customer c
-where date(p.payment_date) = '2005-07-30' and p.customer_id = c.customer_id 
+![image](https://github.com/duha2060/index/assets/80347708/64cc4589-41a3-4034-bdfb-6afd8a121e36)
+
 ```
 
 Дополнительные задания (со звёздочкой*)
